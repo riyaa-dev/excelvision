@@ -1,11 +1,13 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
+
 const API_URL = "http://localhost:5000/api/auth";
 
 export const registerUser = createAsyncThunk("auth/register", async (userData, thunkAPI) => {
   try {
     const res = await axios.post(`${API_URL}/register`, userData);
+    localStorage.setItem("token", res.data.token);
     return res.data;
   } catch (err) {
     return thunkAPI.rejectWithValue(err.response?.data || { message: "Registration failed" });
@@ -15,6 +17,7 @@ export const registerUser = createAsyncThunk("auth/register", async (userData, t
 export const loginUser = createAsyncThunk("auth/login", async (userData, thunkAPI) => {
   try {
     const res = await axios.post(`${API_URL}/login`, userData);
+     localStorage.setItem("token", res.data.token);
     return res.data;
   } catch (err) {
     return thunkAPI.rejectWithValue(err.response?.data || { message: "Login failed" });
@@ -33,6 +36,7 @@ const authSlice = createSlice({
     logout: (state) => {
       state.user = null;
       state.token = null;
+      localStorage.removeItem("token")
     }
   },
   extraReducers: (builder) => {

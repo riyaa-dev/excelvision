@@ -1,22 +1,21 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React, { useState, useEffect } from 'react';
+import axiosInstance from "../features/axiosInstance";
 import { useSelector } from 'react-redux';
 
 const Dashboard = () => {
-  const { user } = useSelector(state => state.auth);
+  const token = localStorage.getItem("token");
+  const { user } = useSelector((state) => state.auth);
   const [file, setFile] = useState(null);
+  const [history, setHistory] = useState([]);
   const [message, setMessage] = useState('');
-  const [history, setHistory] = useState([]);  
-  const [loading, setLoading] = useState(true);
 
+  // Load upload history
   const loadHistory = async () => {
     try {
-      const res = await axios.get('/data/history');
-      setHistory(res.data); // Make sure API returns an array
+      const res = await axiosInstance.get('/data/history'); 
+      setHistory(res.data);
     } catch (err) {
-      console.error("History fetch failed:", err.response?.data?.message);
-    } finally {
-      setLoading(false);
+      console.log('History fetch failed:', err.response?.data?.message || err?.message ||err);
     }
   };
 
@@ -24,6 +23,7 @@ const Dashboard = () => {
     loadHistory();
   }, []);
 
+  // Upload Excel file
   const handleUpload = async (e) => {
     e.preventDefault();
     if (!file) return alert("Please select a file");
@@ -32,12 +32,11 @@ const Dashboard = () => {
     formData.append("file", file);
 
     try {
-      const res = await axios.post('/data/upload', formData);
+      const res = await axiosInstance.post('/data/upload', formData); // ✅ fixed
       setMessage(res.data.message);
-      setFile(null); // optional reset
-      loadHistory(); // Refresh history
+      loadHistory(); // refresh list
     } catch (err) {
-      setMessage('Upload failed: ' + err.response?.data?.message);
+      setMessage("Upload failed: " + err.response?.data?.message);
     }
   };
 
@@ -61,7 +60,7 @@ const Dashboard = () => {
 
       <h2 className="text-lg font-semibold mb-2">Upload History</h2>
       <ul className="list-disc pl-6">
-        {Array.isArray(history) && history.length > 0 ? (
+        {history.length > 0 ? (
           history.map((item) => (
             <li key={item._id}>
               📄 {item.fileName} —{" "}
@@ -70,8 +69,6 @@ const Dashboard = () => {
               </span>
             </li>
           ))
-        ) : loading ? (
-          <p>Loading history...</p>
         ) : (
           <p>No uploads yet.</p>
         )}

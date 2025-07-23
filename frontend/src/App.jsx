@@ -10,6 +10,7 @@ import Dashboard from './pages/Dashboard';
 import Landing from './pages/Landingpage';
 import ProtectedRoute from './components/ProtectedRoute';
 
+
 function App() {
   const [count, setCount] = useState(0);
 
