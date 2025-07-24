@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axiosInstance from "../features/axiosInstance";
 import { useSelector } from 'react-redux';
+import ChartRenderer from '../components/ChartRenderer';
 
 const Dashboard = () => {
   const { user } = useSelector((state) => state.auth);
