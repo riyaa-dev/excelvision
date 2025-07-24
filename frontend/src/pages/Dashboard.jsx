@@ -32,7 +32,7 @@ const Dashboard = () => {
     formData.append("file", file);
 
     try {
-      const res = await axiosInstance.post("/upload/upload", formData);
+      const res = await axiosInstance.post("/upload", formData);
       setMessage("Upload successful!");
       fetchHistory();
       setFile(null);

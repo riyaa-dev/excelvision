@@ -17,7 +17,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads'))); // ✅ Ser
 
 // API Routes
 app.use('/api/auth', authRoutes); // ✅ Auth routes
-app.use('/api/data', uploadRoutes);   // ✅ Upload routes
+app.use('/api/upload', uploadRoutes);   // ✅ Upload routes
 
 // Connect to MongoDB and start server
 mongoose
