@@ -59,20 +59,18 @@ const Dashboard = () => {
       {message && <p className="text-blue-500 mb-4">{message}</p>}
 
       <h2 className="text-lg font-semibold mb-2">Upload History</h2>
-      <ul className="list-disc pl-6">
-        {history.length > 0 ? (
-          history.map((item) => (
-            <li key={item._id}>
-              📄 {item.fileName} —{" "}
-              <span className="text-sm text-gray-600">
-                {new Date(item.uploadedAt).toLocaleString()}
-              </span>
-            </li>
-          ))
-        ) : (
-          <p>No uploads yet.</p>
-        )}
-      </ul>
+     <ul className="list-disc pl-6">
+  {
+    history.length > 0 ? (
+      history.map((item) => (
+        <li key={item._id}>...</li>
+      ))
+    ) : (
+      <li className="text-gray-500">No uploads yet.</li>
+    )
+  }
+</ul>
+
     </div>
   );
 };
