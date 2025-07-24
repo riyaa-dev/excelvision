@@ -60,6 +60,10 @@ const authSlice = createSlice({
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload.message;
+         state.token = action.payload.token;
+
+        localStorage.setItem("token", action.payload.token);
+
       });
   }
 });
