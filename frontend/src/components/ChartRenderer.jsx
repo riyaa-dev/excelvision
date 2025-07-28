@@ -1,4 +1,4 @@
-import React from "react";
+
 import React,{useRef} from "react";
 import { Bar, Line, Pie } from "react-chartjs-2";
 import {
@@ -32,8 +32,10 @@ const ChartRenderer = ({ chartType, chartData }) => {
     if (chartRef.current){
       const canvas = chartRef.current.canvas 
       const link = document .createElement("a");
-      link.href = canvas.toDataUrl("image/png");
+
       link.download = "chart.png";
+      link.href = chartRef.current.toBase64Image();
+
       link.click();
     
     }
@@ -47,46 +49,48 @@ const ChartRenderer = ({ chartType, chartData }) => {
     },
   };
 
-  // Handle if chartData is not properly passed
-  if (!chartData?.labels || !chartData?.datasets) {
-    return <p className="text-red-500">Invalid chart data</p>;
-  }
+  
 
   // Conditional chart rendering
+const renderChart = () => {
+  const props = { data: chartData, options: chartOptions, ref: chartRef };
+
   switch (chartType) {
     case "bar":
-      return <Bar data={chartData} options={chartOptions} />;
-
+      return <Bar {...props} />;
     case "line":
-      return <Line data={chartData} options={chartOptions} />;
-
-    case "pie": {
-      // Only use the first dataset for pie (Chart.js does not support multiple datasets in Pie)
+      return <Line {...props} />;
+    case "pie":
       const pieData = {
         labels: chartData.labels,
         datasets: [
           {
             label: chartData.datasets[0].label,
             data: chartData.datasets[0].data,
-            backgroundColor: chartData.datasets[0].backgroundColor || [
-              "#3b82f6",
-              "#10b981",
-              "#f59e0b",
-              "#ef4444",
-              "#6366f1",
-              "#8b5cf6",
-              "#ec4899",
-              "#22d3ee",
-            ],
+            backgroundColor:
+              chartData.datasets[0].backgroundColor || defaultColors,
           },
         ],
       };
-      return <Pie data={pieData} options={chartOptions} />;
-    }
-
+      return <Pie data={pieData} options={chartOptions} ref={chartRef} />;
     default:
       return <p className="text-red-500">Unsupported chart type</p>;
   }
 };
+
+// Handle if chartData is not properly passed
+  if (!chartData?.labels || !chartData?.datasets) {
+    return <p className="text-red-500">Invalid chart data</p>;
+  }
+
+  return (
+    <div className="space-y-4">
+      <button onClick={handleDownload}
+      className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"> Download Chart</button>
+      {renderChart()}
+    </div>
+  );
+};
+
 
 export default ChartRenderer;
