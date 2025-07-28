@@ -1,4 +1,5 @@
 import React from "react";
+import React,{useRef} from "react";
 import { Bar, Line, Pie } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -25,6 +26,18 @@ ChartJS.register(
 );
 
 const ChartRenderer = ({ chartType, chartData }) => {
+
+  const chartRef = useRef(null);
+  const handleDownload = () => {
+    if (chartRef.current){
+      const canvas = chartRef.current.canvas 
+      const link = document .createElement("a");
+      link.href = canvas.toDataUrl("image/png");
+      link.download = "chart.png";
+      link.click();
+    
+    }
+  }
   // Common options
   const chartOptions = {
     responsive: true,
