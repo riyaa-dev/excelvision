@@ -1,55 +1,79 @@
 import React from "react";
+import { Bar, Line, Pie } from "react-chartjs-2";
 import {
-    Bar,
-    Line,
-    pie,
-}from "react-chartjs-2";
-
-import {
-    Chart as Chartjs,
-    BarElement,
-    CategoryScale,
-    LinearScale,
-    LineElement,
-    PointElement,
-    ArcElemnt,
-    Tooltip,
-    Legend,
-    plugins,
+  Chart as ChartJS,
+  BarElement,
+  LineElement,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  ArcElement,
+  Tooltip,
+  Legend,
 } from "chart.js";
 
-Chartjs.register(
-      BarElement,
-    CategoryScale,
-    LinearScale,
-    LineElement,
-    PointElement,
-    ArcElemnt,
-    Tooltip,
-    Legend,
-
+// Register chart elements
+ChartJS.register(
+  BarElement,
+  LineElement,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  ArcElement,
+  Tooltip,
+  Legend
 );
 
-const ChartRenderer =({chartType ,data , options})=>{
+const ChartRenderer = ({ chartType, chartData }) => {
+  // Common options
+  const chartOptions = {
+    responsive: true,
+    plugins: {
+      legend: { position: "top" },
+      title: { display: true, text: "Excel Chart" },
+    },
+  };
 
-    const chartProps={
-        data:chartData,
-        options :{
-            responsive:true,
-            plugins:{
-                legend:{position:"top"},
-                title: {display:true,text:"Excel Chart"},
+  // Handle if chartData is not properly passed
+  if (!chartData?.labels || !chartData?.datasets) {
+    return <p className="text-red-500">Invalid chart data</p>;
+  }
 
-            },
-        },
+  // Conditional chart rendering
+  switch (chartType) {
+    case "bar":
+      return <Bar data={chartData} options={chartOptions} />;
 
+    case "line":
+      return <Line data={chartData} options={chartOptions} />;
 
-    };
-    if(chartType==="bar") return <Bar {...chartProps}/>;
-    if(chartType==="line") return <line {...chartProps}/>;
-    if(chartProps==="pie") return<pie {...chartProps}/>;
-    return<p>Unsupported chart type</p>
+    case "pie": {
+      // Only use the first dataset for pie (Chart.js does not support multiple datasets in Pie)
+      const pieData = {
+        labels: chartData.labels,
+        datasets: [
+          {
+            label: chartData.datasets[0].label,
+            data: chartData.datasets[0].data,
+            backgroundColor: chartData.datasets[0].backgroundColor || [
+              "#3b82f6",
+              "#10b981",
+              "#f59e0b",
+              "#ef4444",
+              "#6366f1",
+              "#8b5cf6",
+              "#ec4899",
+              "#22d3ee",
+            ],
+          },
+        ],
+      };
+      return <Pie data={pieData} options={chartOptions} />;
+    }
 
+    default:
+      return <p className="text-red-500">Unsupported chart type</p>;
+  }
 };
 
-exports default ChartRenderer;
+export default ChartRenderer;
