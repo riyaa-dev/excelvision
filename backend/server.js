@@ -12,8 +12,10 @@ const app = express(); // ✅ Initialize Express app
 
 // Middleware
 app.use(cors()); // ✅ Enable CORS for all origins
-app.use(express.json()); // ✅ Parse incoming JSON
+
+  app.use(express.json()); // ✅ Parse incoming JSON
 app.use('/uploads', express.static(path.join(__dirname, 'uploads'))); // ✅ Serve uploaded files if needed
+app.use("/api/chart", require("./routes/chartRoutes"));
 
 // API Routes
 app.use('/api/auth', authRoutes); // ✅ Auth routes
