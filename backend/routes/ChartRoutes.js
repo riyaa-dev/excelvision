@@ -9,7 +9,7 @@ router.post("/save", authMiddleware,async (req , res)=>{
     try{
         const {xAxis , yAxis , chartType , data} = req.body;
         const newChart = new Chart({
-            user : req.user.id;
+            user : req.user.id,
             xAxis,
             yAxis,
             chartType,
