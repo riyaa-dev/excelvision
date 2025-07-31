@@ -91,6 +91,13 @@ const renderChart = () => {
     </div>
   );
 };
+<button
+  onClick={handleSaveChart}
+  className="bg-purple-600 text-white px-4 py-2 rounded"
+>
+  Save Chart
+</button>
+
 
 
 export default ChartRenderer;
