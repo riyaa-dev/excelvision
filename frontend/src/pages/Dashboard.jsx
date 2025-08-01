@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import axiosInstance from '../features/axiosInstance';
 import ChartRenderer from '../components/ChartRenderer';
-const [savedCharts, setSavedCharts] = useState([]);
+// const [savedCharts, setSavedCharts] = useState([]);
 
 
 const Dashboard = () => {
