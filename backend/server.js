@@ -4,6 +4,9 @@ const dotenv = require('dotenv');
 const mongoose = require('mongoose');
 const authRoutes = require('./routes/authRoutes');
 const uploadRoutes = require('./routes/uploadRoutes');
+ const chartRoutes = require('./routes/ChartRoutes');
+
+
 const path = require('path');
 
 dotenv.config(); // ✅ Load environment variables
@@ -15,11 +18,12 @@ app.use(cors()); // ✅ Enable CORS for all origins
 
   app.use(express.json()); // ✅ Parse incoming JSON
 app.use('/uploads', express.static(path.join(__dirname, 'uploads'))); // ✅ Serve uploaded files if needed
-app.use("/api/chart", require("./routes/chartRoutes"));
+
 
 // API Routes
 app.use('/api/auth', authRoutes); // ✅ Auth routes
 app.use('/api/upload', uploadRoutes);   // ✅ Upload routes
+app.use("/api/chart", chartRoutes);
 
 // Connect to MongoDB and start server
 mongoose

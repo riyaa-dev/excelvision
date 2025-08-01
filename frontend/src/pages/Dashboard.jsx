@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import axiosInstance from '../features/axiosInstance';
 import ChartRenderer from '../components/ChartRenderer';
+const [savedCharts, setSavedCharts] = useState([]);
+
 
 const Dashboard = () => {
   const { user } = useSelector((state) => state.auth);
@@ -45,6 +47,27 @@ const Dashboard = () => {
       setMessage('Upload successful!');
     } catch (err) {
       setMessage('Upload failed.');
+    }
+  };
+
+  const handleSaveChart = async () => {
+    if (!xAxis || !yAxis || parsedData.length === 0) return;
+
+    try {
+      const res = await axiosInstance.post("/chart/save", {
+        xAxis,
+        yAxis,
+        chartType,
+        data: parsedData.map(row => ({
+          x: row[xAxis],
+          y: row[yAxis],
+        }))
+      });
+
+      alert("Chart saved successfully!");
+    } catch (err) {
+      alert("Failed to save chart");
+      console.error(err);
     }
   };
 
@@ -147,38 +170,46 @@ const Dashboard = () => {
               </select>
             </div>
 
-            {/* Chart Rendering */}
+            {/* Chart Rendering + Save Button */}
             {xAxis && yAxis && parsedData.length > 0 &&
               parsedData[0][xAxis] !== undefined &&
               parsedData[0][yAxis] !== undefined && (
-                <ChartRenderer
-                  chartType={chartType}
-                  chartData={{
-                    labels: parsedData.map((row) => row[xAxis]),
-                    datasets: [
-                      {
-                        label: `${yAxis} vs ${xAxis}`,
-                        data: parsedData.map((row) => row[yAxis]),
-                        backgroundColor: [
-                          '#3b82f6',
-                          '#10b981',
-                          '#f59e0b',
-                          '#ef4444',
-                          '#6366f1',
-                        ],
-                        borderWidth: 1,
-                      },
-                    ],
-                  }}
-                />
+                <>
+                  <ChartRenderer
+                    chartType={chartType}
+                    chartData={{
+                      labels: parsedData.map((row) => row[xAxis]),
+                      datasets: [
+                        {
+                          label: `${yAxis} vs ${xAxis}`,
+                          data: parsedData.map((row) => row[yAxis]),
+                          backgroundColor: [
+                            '#3b82f6',
+                            '#10b981',
+                            '#f59e0b',
+                            '#ef4444',
+                            '#6366f1',
+                          ],
+                          borderWidth: 1,
+                        },
+                      ],
+                    }}
+                  />
+
+                  {/* Save Chart Button */}
+                  <button
+                    onClick={handleSaveChart}
+                    className="mt-4 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg"
+                  >
+                    Save Chart
+                  </button>
+                </>
               )}
           </div>
-          
         ) : (
           <p className="text-center text-gray-500 mt-6">
             Upload Excel file to see chart.
           </p>
-          
         )}
       </div>
     </div>
