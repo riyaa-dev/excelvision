@@ -74,9 +74,6 @@ const Profile = ()=>{
 
         };
 
-
-        
-
         const handleInputChange = (e) => {
     setProfileData({
       ...profileData,
