@@ -16,6 +16,8 @@ router.post("/save", authMiddleware,async (req , res)=>{
             data,
         });
         await newChart.save();
+
+        
         res.status(201).json({message : "Chart saved succesfully !"});  
 
     }catch(err){
